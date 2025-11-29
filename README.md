@@ -39,34 +39,157 @@ Backend for an Employment System connecting Employers and Job Seekers.
    npm run dev
    ```
 
-## API Endpoints
+## API Reference
 
-### Auth
-- `POST /auth/register` - Register (Employer/Job Seeker)
-- `POST /auth/login` - Login
-- `GET /auth/me` - Get current user
+### Authentication
+
+#### Register User
+- **URL**: `/auth/register`
+- **Method**: `POST`
+- **Access**: Public
+- **Body**:
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "role": "Employer" // or "Job Seeker"
+  }
+  ```
+
+#### Login User
+- **URL**: `/auth/login`
+- **Method**: `POST`
+- **Access**: Public
+- **Body**:
+  ```json
+  {
+    "email": "john@example.com",
+    "password": "password123"
+  }
+  ```
+- **Response**: Returns JWT `token` which must be included in the `Authorization` header as `Bearer <token>` for private routes.
+
+#### Get Current User
+- **URL**: `/auth/me`
+- **Method**: `GET`
+- **Access**: Private
 
 ### Jobs
-- `POST /jobs` - Create Job (Employer)
-- `PUT /jobs/:id` - Update Job (Employer)
-- `DELETE /jobs/:id` - Delete Job (Employer)
-- `GET /jobs` - Search Jobs (Public)
-- `GET /jobs/:id` - Get Job Details (Public)
 
-### Applications
-- `POST /applications` - Apply (Job Seeker)
-- `GET /applications` - View Own Applications (Job Seeker)
-- `GET /applications/:id` - Get Application Details (Job Seeker)
-- `DELETE /applications/:id` - Withdraw Application (Job Seeker)
-- `GET /employer/applications` - View Job Applications (Employer)
-- `PUT /employer/applications/:id` - Accept/Reject Application (Employer)
-- `GET /applications/:id/offer` - Download Offer Letter (Job Seeker)
+#### Create Job (Employer only)
+- **URL**: `/jobs`
+- **Method**: `POST`
+- **Access**: Private (Employer)
+- **Body**:
+  ```json
+  {
+    "title": "Software Engineer",
+    "description": "We are looking for a developer...",
+    "location": "Remote",
+    "employmentType": "Full-time" // "Full-time", "Part-time", "Contract", "Internship"
+  }
+  ```
 
-### Admin
-- `GET /admin/users` - Get All Users
-- `GET /admin/jobs` - Get All Jobs
-- `DELETE /admin/jobs/:id` - Delete Job
-- `GET /admin/applications` - Get All Applications
+#### Update Job (Employer only)
+- **URL**: `/jobs/:id`
+- **Method**: `PUT`
+- **Access**: Private (Employer - Owner)
+- **Body**: (Any fields to update)
+
+#### Delete Job (Employer only)
+- **URL**: `/jobs/:id`
+- **Method**: `DELETE`
+- **Access**: Private (Employer - Owner)
+
+#### Search Jobs
+- **URL**: `/jobs`
+- **Method**: `GET`
+- **Access**: Public
+- **Query Params**: `title`, `location`, `employmentType`
+- **Example**: `/jobs?title=Software&location=Remote`
+
+#### Get Job Details
+- **URL**: `/jobs/:id`
+- **Method**: `GET`
+- **Access**: Public
+
+### Applications (Job Seeker)
+
+#### Apply for Job
+- **URL**: `/applications`
+- **Method**: `POST`
+- **Access**: Private (Job Seeker)
+- **Body**:
+  ```json
+  {
+    "jobId": "651234567890abcdef123456"
+  }
+  ```
+
+#### View My Applications
+- **URL**: `/applications`
+- **Method**: `GET`
+- **Access**: Private (Job Seeker)
+
+#### Get Application Details
+- **URL**: `/applications/:id`
+- **Method**: `GET`
+- **Access**: Private (Job Seeker)
+
+#### Withdraw Application
+- **URL**: `/applications/:id`
+- **Method**: `DELETE`
+- **Access**: Private (Job Seeker)
+- **Note**: Can only withdraw if status is `PENDING`.
+
+#### Download Offer Letter
+- **URL**: `/applications/:id/offer`
+- **Method**: `GET`
+- **Access**: Private (Job Seeker)
+- **Note**: Only available if status is `ACCEPTED`. Returns a PDF file.
+
+### Employer Actions
+
+#### View Applications for My Jobs
+- **URL**: `/employer/applications`
+- **Method**: `GET`
+- **Access**: Private (Employer)
+- **Query Params**: `status` (PENDING, ACCEPTED, REJECTED)
+
+#### Accept/Reject Application
+- **URL**: `/employer/applications/:id`
+- **Method**: `PUT`
+- **Access**: Private (Employer)
+- **Body**:
+  ```json
+  {
+    "status": "ACCEPTED" // or "REJECTED"
+  }
+  ```
+
+### Admin Actions
+
+#### Get All Users
+- **URL**: `/admin/users`
+- **Method**: `GET`
+- **Access**: Private (Admin)
+- **Query Params**: `role`
+
+#### Get All Jobs
+- **URL**: `/admin/jobs`
+- **Method**: `GET`
+- **Access**: Private (Admin)
+
+#### Delete Job
+- **URL**: `/admin/jobs/:id`
+- **Method**: `DELETE`
+- **Access**: Private (Admin)
+
+#### Get All Applications
+- **URL**: `/admin/applications`
+- **Method**: `GET`
+- **Access**: Private (Admin)
 
 ## Testing
 

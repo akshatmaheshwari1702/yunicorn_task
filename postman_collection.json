@@ -77,7 +77,7 @@
 			"name": "Jobs",
 			"item": [
 				{
-					"name": "Create Job",
+					"name": "Create Job (Employer)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -105,14 +105,102 @@
 					"response": []
 				},
 				{
-					"name": "Get Jobs",
+					"name": "Update Job (Employer)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Senior Software Engineer\",\n    \"description\": \"Even better job\",\n    \"location\": \"Remote\",\n    \"employmentType\": \"Full-time\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/jobs/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["jobs", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Job (Employer)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/jobs/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["jobs", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Jobs (Public)",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/jobs",
+							"raw": "{{baseUrl}}/jobs?title=Software&location=Remote",
 							"host": ["{{baseUrl}}"],
-							"path": ["jobs"]
+							"path": ["jobs"],
+							"query": [
+								{
+									"key": "title",
+									"value": "Software"
+								},
+								{
+									"key": "location",
+									"value": "Remote"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Job Details (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/jobs/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["jobs", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
 						}
 					},
 					"response": []
@@ -120,7 +208,7 @@
 			]
 		},
 		{
-			"name": "Applications",
+			"name": "Applications (Job Seeker)",
 			"item": [
 				{
 					"name": "Apply",
@@ -151,6 +239,75 @@
 					"response": []
 				},
 				{
+					"name": "View My Applications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/applications",
+							"host": ["{{baseUrl}}"],
+							"path": ["applications"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Application Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/applications/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["applications", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw Application",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/applications/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["applications", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Offer Letter",
 					"request": {
 						"method": "GET",
@@ -171,6 +328,157 @@
 									"value": ""
 								}
 							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employer",
+			"item": [
+				{
+					"name": "View Applications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/employer/applications?status=PENDING",
+							"host": ["{{baseUrl}}"],
+							"path": ["employer", "applications"],
+							"query": [
+								{
+									"key": "status",
+									"value": "PENDING"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept/Reject Application",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"ACCEPTED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/employer/applications/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["employer", "applications", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["admin", "users"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Jobs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/jobs",
+							"host": ["{{baseUrl}}"],
+							"path": ["admin", "jobs"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Job",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/jobs/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["admin", "jobs", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Applications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/applications",
+							"host": ["{{baseUrl}}"],
+							"path": ["admin", "applications"]
 						}
 					},
 					"response": []
